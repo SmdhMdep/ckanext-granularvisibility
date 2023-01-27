@@ -8,7 +8,13 @@
     <select id="field-visibility" name="visibilityid" data-module="autocomplete">
     {% endblock %}
         {% for visibility in h.get_visibilities()  %}
-            <option value="{{ visibility.visibilityid }}" title="{{ visibility.description }}" {% if h.is_selected(data.id, visibility.visibilityid) %}selected="selected"{% endif %}>{{ visibility.visibility }}</option>
+            <option value="{{ visibility.visibilityid }}" title="{{ visibility.description }}" 
+            {% if form_style == 'new' %}
+                {% if h.is_selected(data.id, visibility.visibilityid) %} 
+                    selected="selected"
+                {% endif %}
+            {% endif %}
+                >{{ visibility.visibility }}</option>
         {% endfor %}
     </select>
     </div>
