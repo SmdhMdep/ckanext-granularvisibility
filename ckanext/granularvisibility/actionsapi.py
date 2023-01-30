@@ -9,14 +9,16 @@ def get_package_visibility(context, data_dict):
         data_dict,
         {"packageid": [toolkit.get_validator('ignore_empty'), str]},
     )
+    try: 
+        visibilityid = db.granular_visibility_mapping.get(packageid=data['packageid'])
+        
+        visibilityinfo = db.granular_visibility.get(visibilityid=visibilityid.visibilityid)
+        if visibilityinfo is None:
+            return "no visibility with name stated"
 
-    visibilityid = db.granular_visibility_mapping.get(packageid=data['packageid'])
-    
-    visibilityinfo = db.granular_visibility.get(visibilityid=visibilityid.visibilityid)
-    if visibilityinfo is None:
-        return "no visibility with name stated"
-
-    return visibilityinfo
+        return visibilityinfo
+    except:
+        return  "False"
 
 def get_visibility_mapping(context, data_dict):
 
