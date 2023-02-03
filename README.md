@@ -1,4 +1,4 @@
-[![Tests](https://github.com//ckanext-granularvisibility/workflows/Tests/badge.svg?branch=main)](https://github.com//ckanext-granularvisibility/actions)
+[![Tests](https://github.com/SmdhMdep/ckanext-granularvisibility/actions/workflows/test.yml/badge.svg)](https://github.com/SmdhMdep/ckanext-granularvisibility/actions/workflows/test.yml)
 
 # ckanext-granularvisibility
 
