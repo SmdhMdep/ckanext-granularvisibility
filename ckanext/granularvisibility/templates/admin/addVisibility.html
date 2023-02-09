@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+
+{% import 'macros/form.html' as form %}
+
+{% set data = data or {} %}
+{% set data1 = data or {} %}
+{% set data2 = data or {} %}
+{% set errors = errors or {} %}
+{% set actionAddvisibility = url_for('api.action', ver=3, logic_function='add_visibility') %}
+
+{% block primary_content_inner %}
+  <h2 class="module-heading">
+    <i class="fa fa-info-circle"></i>
+    {{ _('Add a new visibility') }}
+  </h2>
+
+  <p>Add a SINGLE visibility</p>
+
+  <form id="visibility-add" class="dataset-form dataset-resource-form" method="post" action="{{ actionAddvisibility }}" data-module="basic-form resource-form" enctype="multipart/form-data">
+    
+    {{ form.input('visibility', id='visibility', label=_('Name'), placeholder=_('eg. Name'), value=data.visibility, error=errors.name, classes=['control-full']) }}
+
+    {{ form.input('ckanmapping', id='ckanmapping', label=_('ckanmapping'), placeholder=_('eg. true/false'), value=data.ckanmapping, error=errors.name, classes=['control-full']) }}
+
+    {{ form.input('description', id='description', label=_('description'), placeholder=_('eg. description'), value=data.description, error=errors.name, classes=['control-full']) }}
+
+    <button class="btn btn-primary" name="save" value="go-dataset-complete" type="submit">{{ _('Add') }}</button>
+  </form>
+
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="fa fa-info-circle"></i>
+      {{ _('Administer CKAN') }}
+    </h2>
+    <div class="module-content">
+
+      {% set docs_url = "http://docs.ckan.org/en/{0}/sysadmin-guide.html".format(g.ckan_doc_version) %}
+      {% trans %}
+        <p>As a sysadmin user you have full control over this CKAN instance. Proceed with care!</p>
+        <p>For guidance on using sysadmin features, see the CKAN  <a href="{{ docs_url }}" target="_blank" rel="noreferrer">sysadmin guide</a></p>
+      {% endtrans %}
+    </div>
+  </div>
+{% endblock %}
