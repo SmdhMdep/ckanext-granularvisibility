@@ -5,12 +5,12 @@ import ckanext.granularvisibility.db as db
 
 def get_package_visibility(context, data_dict):
 
-    data, errors = toolkit.navl_validate(
-        data_dict,
-        {"packageid": [toolkit.get_validator('ignore_empty'), str]},
-    )
     try: 
-        visibilityid = db.granular_visibility_mapping.get(packageid=data['packageid'])
+        data = {'id': data_dict['packageid']}
+
+        testers = toolkit.get_action('package_show')({'ignore_auth': True}, data)
+
+        visibilityid = db.granular_visibility_mapping.get(packageid=testers['id'])
         
         visibilityinfo = db.granular_visibility.get(visibilityid=visibilityid.visibilityid)
         if visibilityinfo is None:
@@ -70,5 +70,3 @@ def add_visibility(context, data_dict):
     session.commit()
 
     return visibilityinfo
-
-    
