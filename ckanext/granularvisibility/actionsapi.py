@@ -8,9 +8,9 @@ def get_package_visibility(context, data_dict):
     try: 
         data = {'id': data_dict['packageid']}
 
-        testers = toolkit.get_action('package_show')({'ignore_auth': True}, data)
+        packageInfo = toolkit.get_action('package_show')({'ignore_auth': True}, data)
 
-        visibilityid = db.granular_visibility_mapping.get(packageid=testers['id'])
+        visibilityid = db.granular_visibility_mapping.get(packageid=packageInfo['id'])
         
         visibilityinfo = db.granular_visibility.get(visibilityid=visibilityid.visibilityid)
         if visibilityinfo is None:
@@ -56,6 +56,8 @@ def add_visibility(context, data_dict):
         return False
     elif "description" not in data_dict:
         return False
+
+    data_dict['ckanmapping'] = bool(data_dict['ckanmapping'])
 
     newVisibility.visibility = data_dict['visibility']
     newVisibility.ckanmapping = data_dict['ckanmapping']

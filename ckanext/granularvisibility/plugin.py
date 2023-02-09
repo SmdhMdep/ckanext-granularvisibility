@@ -2,11 +2,24 @@ import ckan.model as model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
+from flask import Blueprint
+
 import ckanext.granularvisibility.converters_validators as converters_validators
 import ckanext.granularvisibility.actionsapi as actionsapi
 import ckanext.granularvisibility.helpers as helpers
 import ckanext.granularvisibility.auth as auth
 import ckanext.granularvisibility.db as db
+
+c = toolkit.c
+
+# Used to add page in later get_blueprint()
+def visibility_show():
+    context = {'model': model, 'user': c.user, 'auth_user_obj': c.userobj}
+    try:
+        toolkit.check_access('sysadmin', context, {})
+        return toolkit.render('admin/addVisibility.html')
+    except toolkit.NotAuthorized:
+        return toolkit.abort(403, 'Need to be system administrator to administer')
 
 class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurable)
@@ -15,6 +28,7 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
     plugins.implements(plugins.IDatasetForm)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IBlueprint)
 
     # IConfigurable
     # Creates DB table
@@ -97,6 +111,22 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
             "get_visibility": actionsapi.get_visibility,
         }
         return actions_dict
+
+    # IBlueprint
+    def get_blueprint(self):
+        u'''Return a Flask Blueprint object to be registered by the app.'''
+
+        # Create Blueprint for plugin
+        blueprint = Blueprint(self.name, self.__module__)
+        blueprint.template_folder = u'templates'
+        # Add plugin url rules to Blueprint object
+        rules = [
+            (u'/ckan-admin/visibility', u'admin/visibility', visibility_show),
+        ]
+        for rule in rules:
+            blueprint.add_url_rule(*rule)
+
+        return blueprint
 
 
     
