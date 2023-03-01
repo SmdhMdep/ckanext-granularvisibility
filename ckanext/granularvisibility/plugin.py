@@ -81,8 +81,7 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
         return []
 
     #IPackageController
-    def after_create(self, context, pkg_dict):
-
+    def add_visibility_record(self, context, pkg_dict):
         if 'visibilityid' in pkg_dict and 'id' in pkg_dict:
             visibilityRecord = db.granular_visibility_mapping.get(packageid=pkg_dict['id'])
 
@@ -111,6 +110,22 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
 
             Complete_pkg_dict["private"] = ispublic.ckanmapping
             test = toolkit.get_action('package_update')({'ignore_auth': True}, Complete_pkg_dict)
+
+    def after_create(self, context, pkg_dict):
+        self.add_visibility_record(context, pkg_dict)
+
+    def after_update(self, context, pkg_dict):
+        self.add_visibility_record(context, pkg_dict)
+
+    def after_delete(self, context, pkg_dict):
+        visibility = db.granular_visibility_mapping.get(packageid=pkg_dict["id"])
+    
+        if visibility is not None:
+            session = context['session']
+            session.delete(visibility)
+            return True
+        else:
+            return False
 
     # ITemplateHelpers
     def get_helpers(self):

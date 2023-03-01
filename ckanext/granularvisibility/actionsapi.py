@@ -72,3 +72,14 @@ def add_visibility(context, data_dict):
     session.commit()
 
     return visibilityinfo
+
+def delete_visibility_mapping(context, datasetID):
+
+    visibility = db.granular_visibility_mapping.get(packageid=datasetID)
+    
+    if visibility is not None:
+        session = context['session']
+        session.delete(visibility)
+        return True
+    else:
+        return False
