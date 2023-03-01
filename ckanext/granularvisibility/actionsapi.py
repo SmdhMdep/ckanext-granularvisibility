@@ -68,6 +68,7 @@ def add_visibility(context, data_dict):
     session.add(newVisibility)
     session.flush(newVisibility)
     session.refresh(newVisibility)
+    visibilityinfo = newVisibility
     session.commit()
 
-    return data_dict
+    return visibilityinfo
