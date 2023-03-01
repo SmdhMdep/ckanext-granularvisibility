@@ -71,4 +71,4 @@ def add_visibility(context, data_dict):
     visibilityinfo = newVisibility
     session.commit()
 
-    return visibilityinfp
+    return visibilityinfo
