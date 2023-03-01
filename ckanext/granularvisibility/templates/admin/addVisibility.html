@@ -20,7 +20,7 @@
     
     {{ form.input('visibility', id='visibility', label=_('Name'), placeholder=_('eg. Name'), value=data.visibility, error=errors.name, classes=['control-full']) }}
 
-    {{ form.input('ckanmapping', id='ckanmapping', label=_('ckanmapping'), placeholder=_('eg. true/false'), value=data.ckanmapping, error=errors.name, classes=['control-full']) }}
+    {{ form.input('ckanmapping', id='ckanmapping', label=_('ckanmapping'), placeholder=_('eg. Leave blank for false, type "true" for true'), value=data.ckanmapping, error=errors.name, classes=['control-full']) }}
 
     {{ form.input('description', id='description', label=_('description'), placeholder=_('eg. description'), value=data.description, error=errors.name, classes=['control-full']) }}
 

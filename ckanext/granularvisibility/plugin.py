@@ -4,7 +4,6 @@ import ckan.plugins.toolkit as toolkit
 
 from flask import Blueprint
 
-import ckanext.granularvisibility.converters_validators as converters_validators
 import ckanext.granularvisibility.actionsapi as actionsapi
 import ckanext.granularvisibility.helpers as helpers
 import ckanext.granularvisibility.auth as auth
@@ -29,6 +28,7 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.IPackageController , inherit=True)
 
     # IConfigurable
     # Creates DB table
@@ -62,22 +62,12 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
 
     def create_package_schema(self):
         schema = super(GranularvisibilityPlugin, self).create_package_schema()
-        schema.update({
-                'visibilityid': [
-                    toolkit.get_validator('ignore_missing'),
-                    converters_validators.set_ckan_visiability
-                ]
-            })
+        schema = self._modify_package_schema(schema)
         return schema
 
     def update_package_schema(self):
         schema = super(GranularvisibilityPlugin, self).update_package_schema()
-        schema.update({
-                'visibilityid': [
-                    toolkit.get_validator('ignore_missing'),
-                    converters_validators.set_ckan_visiability
-                ]
-            })
+        schema = self._modify_package_schema(schema)
         return schema
 
     def is_fallback(self):
@@ -89,6 +79,38 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
         # This plugin doesn't handle any special package types, it just
         # registers itself as the default (above).
         return []
+
+    def after_create(self, context, pkg_dict):
+        print("RRRRRRRRRRRRRRRRR ", pkg_dict["id"])
+
+        if 'visibilityid' in pkg_dict and 'id' in pkg_dict:
+            visibilityRecord = db.granular_visibility_mapping.get(packageid=pkg_dict['id'])
+
+            if visibilityRecord is None:
+                newVisibility = db.granular_visibility_mapping()
+                newVisibility.visibilityid = pkg_dict['visibilityid']
+                newVisibility.packageid = pkg_dict['id']
+                newVisibility.save()
+
+                session = context['session']
+                session.add(newVisibility)
+                session.commit()
+
+            else:
+                session = context['session']
+                visibilityRecord.visibilityid = pkg_dict['visibilityid'] 
+                visibilityRecord.save()
+                session.commit()
+            
+            data = {"visibilityid": pkg_dict['visibilityid']}
+            ispublic = toolkit.get_action('get_visibility')({'ignore_auth': True}, data)
+
+            #Get then update package with new mapping for private from the visibility
+            data = {"id": pkg_dict['id']}
+            Complete_pkg_dict = toolkit.get_action('package_show')({'ignore_auth': True}, data)
+
+            Complete_pkg_dict["private"] = ispublic.ckanmapping
+            test = toolkit.get_action('package_update')({'ignore_auth': True}, Complete_pkg_dict)
 
     # ITemplateHelpers
     def get_helpers(self):
