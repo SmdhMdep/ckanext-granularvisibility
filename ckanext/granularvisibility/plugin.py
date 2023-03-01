@@ -80,8 +80,8 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
         # registers itself as the default (above).
         return []
 
+    #IPackageController
     def after_create(self, context, pkg_dict):
-        print("RRRRRRRRRRRRRRRRR ", pkg_dict["id"])
 
         if 'visibilityid' in pkg_dict and 'id' in pkg_dict:
             visibilityRecord = db.granular_visibility_mapping.get(packageid=pkg_dict['id'])
