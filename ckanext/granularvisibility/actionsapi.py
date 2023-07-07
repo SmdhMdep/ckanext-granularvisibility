@@ -83,3 +83,29 @@ def delete_visibility_mapping(context, datasetID):
         return True
     else:
         return False
+    
+def delete_visibility(context, data_dict):
+    # Get all current dataset with the visibility to be deleted
+    visibilities = db.granular_visibility_mapping.find(visibilityid=data_dict['visibility'])
+
+    #get the current private visibility objects
+    privateVisibility = db.granular_visibility.get(visibility="Private")
+    privateVisibilityID = privateVisibility["visibilityid"]
+
+    session = context['session']
+    try:
+        if isinstance(visibilities, list):
+            for visibility in visibilities:
+                print("dataset = ", str(visibility))
+
+                visibility.visibilityid = privateVisibilityID
+        else:
+            visibilities.visibilityid = privateVisibilityID    
+
+    except:
+        print("no dataset with this visibility")
+
+    deleteVisibility = db.granular_visibility.get(visibilityid=data_dict['visibility'])
+
+    session.delete(deleteVisibility)
+    session.commit()

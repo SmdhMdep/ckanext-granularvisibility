@@ -15,6 +15,11 @@ granular_visibility_mapping_table = Table('granular_visibility_mapping', metadat
 
 #Commands that can be preformed on table
 class granular_visibility_mapping(model.DomainObject):
+
+    # Allows for data to be queried 
+    def __getitem__(self, field):
+        return self.__dict__[field]
+
     @classmethod
     def get(cls, **kw):
         query = model.Session.query(cls).autoflush(False)
@@ -42,6 +47,11 @@ granular_visibility_table = Table('granular_visibility', metadata,
 
 #Commands that can be preformed on table
 class granular_visibility(model.DomainObject):
+
+    # Allows for data to be queried 
+    def __getitem__(self, field):
+        return self.__dict__[field]
+
     @classmethod
     def get(cls, **kw):
         query = model.Session.query(cls).autoflush(False)
