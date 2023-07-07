@@ -20,8 +20,11 @@ def get_visibilities():
     visibilitylist = []
 
     try:
-        for x in visibilityinfo:
-            visibilitylist.append(x)
+        for visibility in visibilityinfo:
+            if visibility.visibility == "Private": #Add private to top of list
+                 visibilitylist.insert(0,visibility)
+            else:
+                visibilitylist.append(visibility)
     except:
         visibilitylist.append(visibilityinfo)
 
