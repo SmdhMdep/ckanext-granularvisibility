@@ -146,6 +146,7 @@ class GranularvisibilityPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetFo
             'get_visibility_mapping': actionsapi.get_visibility_mapping,
             'add_visibility': actionsapi.add_visibility,
             "get_visibility": actionsapi.get_visibility,
+            "delete_visibility": actionsapi.delete_visibility
         }
         return actions_dict
 

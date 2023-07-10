@@ -7,6 +7,7 @@
 {% set data2 = data or {} %}
 {% set errors = errors or {} %}
 {% set actionAddvisibility = url_for('api.action', ver=3, logic_function='add_visibility') %}
+{% set actiondeletevisibility = url_for('api.action', ver=3, logic_function='delete_visibility') %}
 
 {% block primary_content_inner %}
   <h2 class="module-heading">
@@ -26,6 +27,40 @@
 
     <button class="btn btn-primary" name="save" value="go-dataset-complete" type="submit">{{ _('Add') }}</button>
   </form>
+
+  <h2 class="module-heading">
+    <i class="fa fa-info-circle"></i>
+    {{ _('Current visibility') }}
+  </h2>
+
+  {% if h.get_visibilities() %}
+    <table class="table table-chunky table-bordered table-striped">
+      <thead>
+      <tr>
+          <th>{{ _('visibility Name') }}</th>
+          <th class="metric">{{ _('Delete') }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for visibility in h.get_visibilities() %}
+          <tr>
+            <td>
+              <h2>{{ visibility.visibility }}</h2>
+            </td>
+            <td class="metric"> 
+              <form id="tags-delete" class="dataset-form dataset-resource-form" method="post" action="{{ actiondeletevisibility }}" data-module="basic-form resource-form" enctype="multipart/form-data">
+                <P>Pressing this button will instantly delete the visibility, and will set all datasets with this visibility to private</P>
+                {{ form.hidden('visibility', value=visibility.visibilityid ) }}
+                <button class="btn btn-primary" name="save" value="go-dataset-complete" type="submit" onclick="return confirm('Are you sure you want to permanently delete the ‘{{ tags }}’ tag?')">{{ _('Delete') }}</button> 
+              </form>
+            </td>
+          </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty">{{ _('No tags') }}</p>
+  {% endif %}
 
 {% endblock %}
 
