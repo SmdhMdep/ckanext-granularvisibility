@@ -1,0 +1,9 @@
+#viz-description-container {
+    display: flex;
+    gap: 0.7em;
+    align-items:center;
+    margin-top: 0.5em;
+}
+#viz-des-icon {
+    font-size: 1.5em;
+}
