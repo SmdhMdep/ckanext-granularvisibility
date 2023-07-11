@@ -1,14 +1,14 @@
-# granularvisibility-js:
-#   filter: rjsmin
-#   output: ckanext-granularvisibility/%(version)s-granularvisibility.js
-#   contents:
-#     - js/granularvisibility.js
-#   extra:
-#     preload:
-#       - base/main
+granularvisibility-js:
+  filter: rjsmin
+  output: granularvisibility/%(version)s-granularvisibility.js
+  contents:
+    - js/granular_description.js
+  extra:
+    preload:
+      - base/main
 
-# granularvisibility-css:
-#   filter: cssrewrite
-#   output: ckanext-granularvisibility/%(version)s-granularvisibility.css
-#   contents:
-#     - css/granularvisibility.css
+granularvisibility-css:
+  filter: cssrewrite
+  output: granularvisibility/%(version)s-granularvisibility.css
+  contents:
+    - css/granularvisibility.css
